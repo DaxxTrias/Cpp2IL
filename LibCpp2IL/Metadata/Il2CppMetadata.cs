@@ -14,8 +14,9 @@ namespace LibCpp2IL.Metadata;
 public class Il2CppMetadata : ClassReadingBinaryReader
 {
     public const uint MetadataMagic = 0xFAB11BAF;
-    public new float MetadataVersion { get; private set; }
-    public UnityVersion UnityVersion { get; }   
+    public override float MetadataVersion => _metadataVersion;
+    private float _metadataVersion;
+    public UnityVersion UnityVersion { get; }
 
     //Disable null check as this stuff is reflected.
     public Il2CppGlobalMetadataHeader metadataHeader;
@@ -132,7 +133,7 @@ public class Il2CppMetadata : ClassReadingBinaryReader
     private Il2CppMetadata(MemoryStream stream, UnityVersion unityVersion, float metadataVersion) : base(stream)
     {
         UnityVersion = unityVersion;
-        MetadataVersion = metadataVersion;
+        _metadataVersion = metadataVersion;
         metadataHeader = ReadReadable<Il2CppGlobalMetadataHeader>();
         
         if (metadataHeader.magicNumber != MetadataMagic)
@@ -485,6 +486,6 @@ public class Il2CppMetadata : ClassReadingBinaryReader
     }
     public void SetMetadataVersion(float version)
     {
-        MetadataVersion = version;
+        _metadataVersion = version;
     }
 }
