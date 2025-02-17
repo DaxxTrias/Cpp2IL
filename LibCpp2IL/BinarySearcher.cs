@@ -206,7 +206,7 @@ public class BinarySearcher(Il2CppBinary binary, int methodCount, int typeDefini
                 throw new Exception("Found more than 1 pointer as pCodegenModules");
         }
 
-        LibLogger.VerboseNewline($"\t\t\tFound {pCodegenModules.Count} potential pCodegenModules addresses: [{string.join(", ", pCodegenModules.Select(p => p.ToString("X")))}]");
+        LibLogger.VerboseNewline($"\t\t\tFound {pCodegenModules.Count} potential pCodegenModules addresses: [{string.Join(", ", pCodegenModules.Select(p => p.ToString("X")))}]");
 
         //We have pCodegenModules which *should* be x-reffed in the last pointer of Il2CppCodeRegistration.
         //So, subtract the size of one pointer from that...
