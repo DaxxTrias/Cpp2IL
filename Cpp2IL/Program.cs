@@ -562,6 +562,11 @@ internal class Program
 
         result.LowMemoryMode = options.LowMemoryMode;
 
+        if (!string.IsNullOrEmpty(options.ForcedMetadataVersion))
+        {
+            result.ForcedMetadataVersion = options.ForcedMetadataVersion;
+        }
+
         // if(string.IsNullOrEmpty(options.OutputFormatId))      // throw new SoftException("No output format specified, so nothing to do!");
 
         if (!string.IsNullOrEmpty(options.OutputFormatId))
@@ -677,6 +682,11 @@ internal class Program
             WasmFile.RemappedDynCallFunctions = null;
 
         Cpp2IlApi.InitializeLibCpp2Il(runtimeArgs.PathToAssembly, runtimeArgs.PathToMetadata, runtimeArgs.UnityVersion);
+
+        if (runtimeArgs.ForcedMetadataVersion != null)
+        {
+            Cpp2IlApi.ForceMetadataVersion(runtimeArgs.ForcedMetadataVersion);
+        }
 
         if (runtimeArgs.LowMemoryMode)
             GC.Collect();

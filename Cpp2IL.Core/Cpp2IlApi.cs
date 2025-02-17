@@ -32,7 +32,14 @@ public static class Cpp2IlApi
     }
 
     public static UnityVersion DetermineUnityVersion(string? unityPlayerPath, string? gameDataPath)
-        => LibCpp2IlMain.DetermineUnityVersion(unityPlayerPath, gameDataPath);
+    {
+        var unityVersion = LibCpp2IlMain.DetermineUnityVersion(unityPlayerPath, gameDataPath);
+        if (RuntimeOptions?.ForcedMetadataVersion != null)
+        {
+            ForceMetadataVersion(RuntimeOptions.ForcedMetadataVersion);
+        }
+        return unityVersion;
+    }
 
     public static UnityVersion GetVersionFromGlobalGameManagers(byte[] ggmBytes)
         => LibCpp2IlMain.GetVersionFromGlobalGameManagers(ggmBytes);
@@ -122,6 +129,21 @@ public static class Cpp2IlApi
         LibCpp2IlMain.Reset();
 
         CurrentAppContext = null;
+    }
+
+    public static void ForceMetadataVersion(string metadataVersion)
+    {
+        if (LibCpp2IlMain.TheMetadata != null)
+        {
+            if (float.TryParse(metadataVersion.TrimStart('v', 'V'), out float version))
+            {
+                LibCpp2IlMain.TheMetadata.SetMetadataVersion(version);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid metadata version format", nameof(metadataVersion));
+            }
+        }
     }
 
     // public static void PopulateConcreteImplementations()

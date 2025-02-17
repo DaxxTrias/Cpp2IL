@@ -14,7 +14,7 @@ namespace LibCpp2IL.Metadata;
 public class Il2CppMetadata : ClassReadingBinaryReader
 {
     public const uint MetadataMagic = 0xFAB11BAF;
-    public override float MetadataVersion { get; }
+    public override float MetadataVersion { get; private set; }
     public UnityVersion UnityVersion { get; }
     
     //Disable null check as this stuff is reflected.
@@ -58,7 +58,7 @@ public class Il2CppMetadata : ClassReadingBinaryReader
 
     public static bool HasMetadataHeader(byte[] bytes) => bytes.Length >= 4 && BitConverter.ToUInt32(bytes, 0) == 0xFAB11BAF;
 
-    public static Il2CppMetadata ReadFrom(byte[] bytes, UnityVersion unityVersion)
+    public static Il2CppMetadata ReadFrom(byte[] bytes, UnityVersion unityVersion, string? forcedMetadataVersion = null)
     {
         if (!HasMetadataHeader(bytes))
         {
@@ -75,7 +75,11 @@ public class Il2CppMetadata : ClassReadingBinaryReader
         LibLogger.VerboseNewline($"\tIL2CPP Metadata Declares its version as {version}");
 
         float actualVersion;
-        if (version == 24)
+        if (forcedMetadataVersion != null)
+        {
+            actualVersion = float.Parse(forcedMetadataVersion);
+        }
+        else if (version == 24)
         {
             if (unityVersion.GreaterThanOrEquals(2020, 1, 11))
                 actualVersion = 24.4f; //2020.1.11-17 were released prior to 2019.4.21, so are still on 24.4
@@ -478,5 +482,9 @@ public class Il2CppMetadata : ClassReadingBinaryReader
         var stringLiteral = stringLiterals[index];
 
         return Encoding.UTF8.GetString(ReadByteArrayAtRawAddress(metadataHeader.stringLiteralDataOffset + stringLiteral.dataIndex, (int)stringLiteral.length));
+    }
+    public void SetMetadataVersion(float version)
+    {
+        MetadataVersion = version;
     }
 }

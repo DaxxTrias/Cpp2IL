@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AssetRipper.Primitives;
 using Cpp2IL.Core.Api;
 
@@ -23,4 +23,6 @@ public class Cpp2IlRuntimeArgs
     public string OutputRootDirectory = null!;
 
     public bool LowMemoryMode;
+
+    public string? ForcedMetadataVersion = string.Empty;
 }

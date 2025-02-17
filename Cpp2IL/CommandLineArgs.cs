@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -26,6 +26,9 @@ public class CommandLineArgs
 
     [Option("force-unity-version", HelpText = "Override the unity version detection. Don't use unless you know what you're doing, and use in conjunction with the other force options.")]
     public string? ForcedUnityVersion { get; set; }
+
+    [Option("force-metadata-version", HelpText = "Override the metadata version detection. Don't use unless you know what you're doing, and use in conjunction with the other force options.")]
+    public string? ForcedMetadataVersion { get; set; }
 
     //Processor options
 
@@ -65,9 +68,9 @@ public class CommandLineArgs
     {
         get
         {
-            if (ForcedBinaryPath != null && ForcedMetadataPath != null && ForcedUnityVersion != null)
+            if (ForcedBinaryPath != null && ForcedMetadataPath != null && ForcedUnityVersion != null && ForcedMetadataVersion != null)
                 return true;
-            if (ForcedBinaryPath == null && ForcedMetadataPath == null && ForcedUnityVersion == null)
+            if (ForcedBinaryPath == null && ForcedMetadataPath == null && ForcedUnityVersion == null && ForcedMetadataVersion == null)
                 return true;
 
             return false;
