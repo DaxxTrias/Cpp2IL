@@ -77,10 +77,16 @@ public class ApplicationAnalysisContext : ContextWithDataStorage
     /// </summary>
     public bool HasFinishedInitializing { get; private set; }
 
-    public ApplicationAnalysisContext(Il2CppBinary binary, Il2CppMetadata metadata)
+    /// <summary>
+    /// The forced metadata version, if any.
+    /// </summary>
+    public float? ForcedMetadataVersion { get; }
+
+    public ApplicationAnalysisContext(Il2CppBinary binary, Il2CppMetadata metadata, float? forcedMetadataVersion = null)
     {
         Binary = binary;
         Metadata = metadata;
+        ForcedMetadataVersion = forcedMetadataVersion;
 
         try
         {

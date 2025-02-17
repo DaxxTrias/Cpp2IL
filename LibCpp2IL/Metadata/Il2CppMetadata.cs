@@ -14,9 +14,9 @@ namespace LibCpp2IL.Metadata;
 public class Il2CppMetadata : ClassReadingBinaryReader
 {
     public const uint MetadataMagic = 0xFAB11BAF;
-    public override float MetadataVersion { get; private set; }
-    public UnityVersion UnityVersion { get; }
-    
+    public new float MetadataVersion { get; private set; }
+    public UnityVersion UnityVersion { get; }   
+
     //Disable null check as this stuff is reflected.
     public Il2CppGlobalMetadataHeader metadataHeader;
     public Il2CppAssemblyDefinition[] AssemblyDefinitions;

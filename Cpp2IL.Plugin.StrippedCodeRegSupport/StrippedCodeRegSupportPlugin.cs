@@ -1,4 +1,5 @@
-﻿using Cpp2IL.Core.Api;
+using Cpp2IL.Core.Api;
+// No changes needed in this file
 using Cpp2IL.Core.Attributes;
 using Cpp2IL.Plugin.StrippedCodeRegSupport;
 using LibCpp2IL;

@@ -1,5 +1,5 @@
 using System.Linq;
-
+// No changes needed in this file
 namespace LibCpp2IL.Metadata;
 
 public class Il2CppImageDefinition : ReadableClass
