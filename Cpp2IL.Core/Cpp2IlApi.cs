@@ -80,6 +80,10 @@ public static class Cpp2IlApi
                 throw new LibCpp2ILInitializationException("Fatal Exception initializing LibCpp2IL!", e);
             }
 #endif
+        if (RuntimeOptions?.ForcedMetadataVersion != null)
+        {
+            ForceMetadataVersion(RuntimeOptions.ForcedMetadataVersion);
+        }
         OnLibInitialized();
     }
 
@@ -101,7 +105,10 @@ public static class Cpp2IlApi
         {
             throw new LibCpp2ILInitializationException("Fatal Exception initializing LibCpp2IL!", e);
         }
-
+        if (RuntimeOptions?.ForcedMetadataVersion != null)
+        {
+            ForceMetadataVersion(RuntimeOptions.ForcedMetadataVersion);
+        }
         OnLibInitialized();
     }
 
