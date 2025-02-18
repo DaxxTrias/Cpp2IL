@@ -298,4 +298,9 @@ public abstract class HasCustomAttributes(uint token, ApplicationAnalysisContext
             }
         }
     }
+
+    public void InitializeCustomAttributeData()
+    {
+        InitCustomAttributeData();
+    }
 }
