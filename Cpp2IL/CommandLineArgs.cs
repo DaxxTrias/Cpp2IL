@@ -68,9 +68,9 @@ public class CommandLineArgs
     {
         get
         {
-            if (ForcedBinaryPath != null && ForcedMetadataPath != null && ForcedUnityVersion != null && ForcedMetadataVersion != null)
+            if (ForcedBinaryPath != null && ForcedMetadataPath != null && ForcedUnityVersion != null)
                 return true;
-            if (ForcedBinaryPath == null && ForcedMetadataPath == null && ForcedUnityVersion == null && ForcedMetadataVersion == null)
+            if (ForcedBinaryPath == null && ForcedMetadataPath == null && ForcedUnityVersion == null)
                 return true;
 
             return false;

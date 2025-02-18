@@ -24,5 +24,5 @@ public class Cpp2IlRuntimeArgs
 
     public bool LowMemoryMode;
 
-    public string? ForcedMetadataVersion = string.Empty;
+    public string? ForcedMetadataVersion;
 }
