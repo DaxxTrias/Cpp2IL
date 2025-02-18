@@ -92,20 +92,54 @@ public static class AttributeInjectionUtils
 
     private static void ApplyAttributeUsageAttribute(ApplicationAnalysisContext appContext, MultiAssemblyInjectedType multiAssemblyInjectedType, AttributeTargets attributeTargets, bool allowMultiple)
     {
-        var mscorlibAssembly = appContext.GetAssemblyByName("mscorlib") ?? throw new("Could not find mscorlib");
+        System.Diagnostics.Debugger.Launch();
+        var mscorlibAssembly = appContext.GetAssemblyByName("mscorlib");
+        if (mscorlibAssembly == null)
+        {
+            throw new NullReferenceException("mscorlibAssembly is null");
+        }
+
         var targetsEnumType = GetAttributeTargetsType(mscorlibAssembly);
-        var usageAttribute = mscorlibAssembly.GetTypeByFullName($"System.{nameof(AttributeUsageAttribute)}") ?? throw new("Could not find AttributeUsageAttribute");
-        var usageConstructor = usageAttribute.Methods.First(m => (m.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public && m.Name == ".ctor");
-        var allowMultipleProperty = usageAttribute.Properties.First(p => p.Name == nameof(AttributeUsageAttribute.AllowMultiple));
+        if (targetsEnumType == null)
+        {
+            throw new NullReferenceException("targetsEnumType is null");
+        }
+
+        var usageAttribute = mscorlibAssembly.GetTypeByFullName($"System.{nameof(AttributeUsageAttribute)}");
+        if (usageAttribute == null)
+        {
+            throw new NullReferenceException("usageAttribute is null");
+        }
+
+        var usageConstructor = usageAttribute.Methods.FirstOrDefault(m => (m.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public && m.Name == ".ctor");
+        if (usageConstructor == null)
+        {
+            throw new NullReferenceException("usageConstructor is null");
+        }
+
+        var allowMultipleProperty = usageAttribute.Properties.FirstOrDefault(p => p.Name == nameof(AttributeUsageAttribute.AllowMultiple));
+        if (allowMultipleProperty == null)
+        {
+            throw new NullReferenceException("allowMultipleProperty is null");
+        }
+
         foreach (var injectedType in multiAssemblyInjectedType.InjectedTypes)
         {
+            injectedType.InitializeCustomAttributeData();
+
             var newAttribute = new AnalyzedCustomAttribute(usageConstructor);
             var enumParameter = new CustomAttributeEnumParameter(targetsEnumType, appContext, newAttribute, CustomAttributeParameterKind.ConstructorParam, 0);
             enumParameter.UnderlyingPrimitiveParameter.PrimitiveValue = (int)attributeTargets;
             newAttribute.ConstructorParameters.Add(enumParameter);
             newAttribute.Properties.Add(new(allowMultipleProperty, new CustomAttributePrimitiveParameter(allowMultiple, newAttribute, CustomAttributeParameterKind.Property, 1)));
-            injectedType.AnalyzeCustomAttributeData();
-            injectedType.CustomAttributes!.Add(newAttribute); //Nullability checked above
+
+            if (injectedType.CustomAttributes == null)
+            {
+                injectedType.CustomAttributes = new List<AnalyzedCustomAttribute>();
+                injectedType.AnalyzeCustomAttributeData();
+            } 
+
+            injectedType.CustomAttributes.Add(newAttribute);
         }
     }
 
