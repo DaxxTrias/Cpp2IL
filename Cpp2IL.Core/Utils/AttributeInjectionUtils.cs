@@ -99,18 +99,15 @@ public static class AttributeInjectionUtils
         var allowMultipleProperty = usageAttribute.Properties.First(p => p.Name == nameof(AttributeUsageAttribute.AllowMultiple));
         foreach (var injectedType in multiAssemblyInjectedType.InjectedTypes)
         {
+            injectedType.AnalyzeCustomAttributeData();
+            if (injectedType.CustomAttributes == null)
+                continue;
+
             var newAttribute = new AnalyzedCustomAttribute(usageConstructor);
             var enumParameter = new CustomAttributeEnumParameter(targetsEnumType, appContext, newAttribute, CustomAttributeParameterKind.ConstructorParam, 0);
             enumParameter.UnderlyingPrimitiveParameter.PrimitiveValue = (int)attributeTargets;
             newAttribute.ConstructorParameters.Add(enumParameter);
             newAttribute.Properties.Add(new(allowMultipleProperty, new CustomAttributePrimitiveParameter(allowMultiple, newAttribute, CustomAttributeParameterKind.Property, 1)));
-
-            if (injectedType.CustomAttributes == null)
-            {
-                injectedType.CustomAttributes = new List<AnalyzedCustomAttribute>();
-                injectedType.AnalyzeCustomAttributeData();
-            } 
-
             injectedType.CustomAttributes.Add(newAttribute);
         }
     }
